@@ -13,7 +13,6 @@ from pesnet.ferminet import FermiNet
 from pesnet.ferminet_deepmind import FermiNet as Fermi_DM
 from pesnet.transformer_comp import Transformer
 from pesnet.eanet import EANet
-from pesnet.gold_standard import Model as GoldModel
 from pesnet.gnn import GNN, GNNPlaceholder, GNNFoo
 from pesnet.nn import MLP, ParamTree
 from pesnet.utils import get_pca_axis
@@ -591,8 +590,6 @@ def make_pesnet(
                          **ferminet_params)
     elif modeltype == 'eanet':
         model = EANet(charges, spins, full_det, envelope_type, **ferminet_params)
-    elif modeltype == 'gold':
-        model = GoldModel(charges, spins, full_det, envelope_type, **ferminet_params)
     elif modeltype == 'trans':
         model = Transformer('vanilla', ferminet_params, spins, full_det, envelope_type)
     else:
