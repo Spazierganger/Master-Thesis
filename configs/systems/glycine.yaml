@@ -1,0 +1,60 @@
+system:
+  name: from_xyz
+  training:
+    collection_type: static
+    config:
+      file_name: data/glycine_confs.xyz
+      state:
+        - conf1
+        # - conf2
+        # - conf3
+        # - conf4
+        # - conf5
+        # - conf6
+        # - conf7
+        # - conf8
+        # - sp13
+        # - sp14
+        # - sp15
+        # - sp16
+        # - sp23
+        # - sp25
+        # - sp26
+        # - sp27
+        # - sp28
+        # - sp35
+        # - sp37
+        # - sp48
+        # - sp57
+        # - sp67
+        # - sp68
+
+  validation:
+    collection_type: static
+    total_samples: 100
+    config:
+      file_name: data/glycine_confs.xyz
+      state:
+        - conf1
+        - conf2
+        - conf3
+        # - conf4
+        # - conf5
+        # - conf6
+        # - conf7
+        # - conf8
+        # - sp13
+        # - sp14
+        # - sp15
+        # - sp16
+        # - sp23
+        # - sp25
+        # - sp26
+        # - sp27
+        # - sp28
+        # - sp35
+        # - sp37
+        # - sp48
+        # - sp57
+        # - sp67
+        # - sp68

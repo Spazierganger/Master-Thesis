@@ -1,0 +1,20 @@
+system:
+  name: nh3o3
+  training:
+    collection_type: static
+    config:
+      state:
+        # - complex
+        # - product
+        - separated
+
+  validation:
+    collection_type: static
+    total_samples: 1000000
+    config:
+      state:
+        # - complex
+        # - product
+        - separated
+
+# comparison_idx: 0

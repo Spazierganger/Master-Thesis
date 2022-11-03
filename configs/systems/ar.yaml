@@ -1,0 +1,14 @@
+system:
+  name: atomic
+  training:
+    collection_type: dynamic
+    n_configs: 1
+    config:
+      symbol: Ar
+
+  validation:
+    collection_type: static
+    n_configs: 1
+    total_samples: 1000000
+    config:
+      symbol: Ar

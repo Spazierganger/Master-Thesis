@@ -1,0 +1,199 @@
+seml:
+    executable: /nfs/homedirs/qian/pesnet/train.py
+    name: qcd_ma
+    output_dir: /nfs/homedirs/qian/pesnet/seml_logs
+    project_root_dir: /nfs/homedirs/qian/pesnet
+
+slurm:
+    experiments_per_job: 1
+    sbatch_options:
+        gres: gpu:1       # num GPUs
+        mem: 12G          # memory
+        cpus-per-task: 1  # num cores
+        time: 14-00:00     # max time, D-HH:MM
+        partition: gpu_large
+        exclude: gpu15,gpu16,gpu17,gpu20
+        # partition: gpu_all
+
+fixed:
+    sampling:
+        init_width: 0.02
+        steps: 40
+
+    optimization:
+        aux_loss_weight: 1.e-3
+        optimizer: sgd+clip
+        clip_local_energy: 5.0
+        clipping_method: ferminet
+        gradient: natural
+        max_norm: 1.0
+        accumulate_n: 1
+        lr:
+            init: 1.e-1
+            decay: 1.0
+            delay: 1000.0
+            gnn_prefactor: 1.0
+        cg:
+            damping:
+                method: std_based
+                init: 1.e-3
+                schedule:
+                    delay: 1000.0
+                    decay: 1.0
+                    min: 1.e-5
+                    schedule: hyperbola
+                adaptive:
+                    step_size: 0.5
+                    test_every: 50
+                    threshold: 1.e-4
+                std_based:
+                    base: 1.e-4
+                    # base: 3.e-4
+                    # base: 1.e-3
+            maxiter: 100
+            precondition: False
+
+    training:
+        batch_size: 4096
+        val_batch_size: 4096
+        thermalizing_steps: 500
+        checkpoint_every: 1000
+        max_steps: 50000
+        patience: 10000
+        ema: 0.99
+        eps: 0.001
+
+    pretraining:
+        steps: 2000
+        single: False
+        restricted: True
+        lr: 0.0003
+        
+    pretrain_gnn: False
+
+    pesnet:
+        correlate_meta: False
+        full_det: False
+        envelope_type: 'isotropic'
+        gnn_params:
+            layers: [[32, 64], [32, 64]]
+            embedding_dim: 64
+            out_mlp_depth: 2
+            use_pos_encoding: True
+            pos_encoding_config:
+                cutoff: 5.
+                n_sph: 7
+                n_rad: 6
+            activation: silu
+
+
+        # model_type: fermi_dm
+        # fermi_dm_params:
+        #     determinants: 16
+        #     hidden_dims:
+        #       [[256, 32], [256, 32], [256, 32], [256, 32]]
+        #     # jastrow_config:
+        #     #     n_layers: 3
+        #     #     activation: silu
+
+        model_type: ferminet
+        ferminet_params:
+            encoder_geometrics: False
+            determinants: 16
+            hidden_dims:
+              [[256, 32], [256, 32], [256, 32], [256, 32]]
+            nuclei_embedding: 32
+            input_mlp_dims: [32, 32]
+            input_activation: tanh
+            fermi_activation: silu
+            # jastrow_config:
+            #     n_layers: 3
+            #     activation: silu
+
+        # https://gitlab.lrz.de/ge69bec/pesnet/-/blob/flax/configs/pesnet.yaml
+        global_filter: {}
+#             {
+#                 'params': {
+#                     '$': [
+#                             {
+#                                 'input_construction': {
+#                                     **{
+#                                         f'Dense_{i}': {
+#                                             'bias': None
+#                                         }
+#                                         for i in range(2)
+#                                     }
+#                                 }
+#                             }
+#                         ],
+
+#                     'logsumdet': {
+#                                     'w': None
+#                                 },
+
+#                     'jastrow': {'Dense_2': {'kernel': None}},
+#                     '$$': [
+#                                     {
+#                                         'jastrow': {
+#                                             f'Dense_{i}': {'bias': None}
+#                                             for i in range(3)
+#                                         }
+#                                     }
+#                                 ],
+
+#                     'to_orbitals': {
+#                                     'Dense_0': {'bias': None},
+#                                     'Dense_1': {'bias': None},
+#                                 },
+
+#                     'linear': {'bias': None},
+
+#                     'node_compress': {'Dense_0': {'bias': None}},
+#                     'node_compress': {'GaussRBF_0': {'gauss_rbf_mu': None, 
+#                                                      'gauss_rbf_sigma': None}},
+
+#                     '$$$': [
+#                                     {
+#                                         f'layers_{i}': {
+#                                             'Dense_0': {'bias': None}
+#                                         }
+#                                         for i in range(4)
+#                                     }
+#                                 ],
+#                 }
+#             }
+        node_filter: {}
+            # {
+            #     'params': {
+            #         'to_orbitals': {
+            #             '$': [
+            #                 {
+            #                     f'IsotropicEnvelope_{i}': {'pi': None}
+            #                     for i in range(2)
+            #                 },
+            #             ],
+            #             '$$': [
+            #                 {
+            #                     f'IsotropicEnvelope_{i}': {'sigma': None}
+            #                     for i in range(2)
+            #                 },
+            #             ],
+            #         },
+            #         'input_construction': {
+            #             'nuc_embedding1': None
+            #         }
+            #     }
+            # }
+        include_default_filter: False
+        meta_network: gnn
+
+# grid:
+
+#     seed:
+#         type: choice
+#         options:
+#             - 12221
+#             - 37446
+#             - 84364
+#             - 82454
+

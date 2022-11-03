@@ -1,0 +1,47 @@
+seml:
+  executable: train.py
+  name: pesnet
+  output_dir: ~/slurm-output
+  conda_environment: pesnet
+  project_root_dir: .
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1
+    mem: 16G
+    cpus-per-task: 16
+    time: 28-00:00
+    partition: gpu_large
+    exclude: gpu[15,17]
+
+fixed:
+  pesnet.ferminet_params.determinants: 32
+  training.max_steps: 200000
+  training.patience: 10000
+  training.batch_size: 3000
+  pretraining.steps: 4000
+  optimization.accumulate_n: 1
+
+  comparison_idx: 0
+
+  system:
+    name: from_xyz
+    training:
+      collection_type: static
+      config:
+        file_name: data/nh3_o3.xyz
+        state:
+          - complex
+          - transition
+          - product
+
+    validation:
+      collection_type: static
+      total_samples: 1000000
+      config:
+        file_name: data/nh3_o3.xyz
+        state:
+          - complex
+          - transition
+          - product

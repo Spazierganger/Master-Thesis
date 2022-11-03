@@ -1,0 +1,87 @@
+seml:
+  executable: train.py
+  name: pesnet
+  output_dir: ~/slurm-output
+  conda_environment: pesnet
+  project_root_dir: .
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1
+    mem: 16G
+    cpus-per-task: 16
+    time: 28-00:00
+    partition: gpu_large
+    exclude: gpu[15,17]
+
+fixed:
+  pesnet.ferminet_params.determinants: 32
+  training.max_steps: 200000
+  training.patience: 10000
+  training.batch_size: 2870
+  pretraining.steps: 4000
+  optimization.accumulate_n: 1
+
+  comparison_idx: 0
+
+  system:
+    name: from_xyz
+    training:
+      collection_type: static
+      config:
+        file_name: data/glycine_confs.xyz
+        state:
+          - conf1
+          - conf2
+          - conf3
+          - conf4
+          - conf5
+          - conf6
+          - conf7
+          - conf8
+          - sp13
+          - sp14
+          - sp15
+          - sp16
+          - sp23
+          - sp25
+          - sp26
+          - sp27
+          - sp28
+          - sp35
+          - sp37
+          - sp48
+          - sp57
+          - sp67
+          - sp68
+
+    validation:
+      collection_type: static
+      total_samples: 1000000
+      config:
+        file_name: data/glycine_confs.xyz
+        state:
+          - conf1
+          - conf2
+          - conf3
+          - conf4
+          - conf5
+          - conf6
+          - conf7
+          - conf8
+          - sp13
+          - sp14
+          - sp15
+          - sp16
+          - sp23
+          - sp25
+          - sp26
+          - sp27
+          - sp28
+          - sp35
+          - sp37
+          - sp48
+          - sp57
+          - sp67
+          - sp68

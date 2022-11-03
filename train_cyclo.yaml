@@ -1,0 +1,42 @@
+seml:
+  executable: train.py
+  name: pesnet
+  output_dir: ~/slurm-output
+  conda_environment: pesnet
+  project_root_dir: .
+
+slurm:
+  experiments_per_job: 1
+  sbatch_options:
+    gres: gpu:1
+    mem: 16G
+    cpus-per-task: 16
+    time: 28-00:00
+    partition: gpu_large
+    exclude: gpu[15,17]
+
+fixed:
+  pesnet.ferminet_params.determinants: 32
+  pesnet.ferminet_params.hidden_dims:
+      [[512, 32, True], [512, 32, True], [512, 32, True], [512, 32, True]]
+  training.max_steps: 200000
+  training.patience: 10000
+
+  comparison_idx: 0
+
+  system:
+    name: cyclobutadiene
+    training:
+      collection_type: static
+      config:
+        state:
+          - ground
+          - transition
+
+    validation:
+      collection_type: static
+      total_samples: 1000000
+      config:
+        state:
+          - ground
+          - transition

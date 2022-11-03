@@ -1,0 +1,26 @@
+system:
+  name: h_chain
+  training:
+    collection_type: dynamic
+    # n_configs: 16
+    n_configs: 1
+    config:
+      n: 10
+      R: 2.0
+
+  validation:
+    collection_type: static
+    total_samples: 1000
+    config:
+      n: 10
+      R:
+        - 1.0
+        - 1.2
+        - 1.4
+        - 1.6
+        - 1.8
+        # - 2.0
+        - 2.4
+        - 2.8
+        - 3.2
+        - 3.6
